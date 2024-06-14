@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Torrent {
+  id        Int      @id @default(autoincrement())
+  infoHash  String   @unique
+  name      String
+  leechers  Int      @default(0)
+  seeders   Int      @default(0)
+  banned    Boolean  @default(false)
+  approval  Boolean?
+  createdAt DateTime @default(now())
+  peers     Peer[]
+}
+
+model Peer {
+  id         Int      @id @default(autoincrement())
+  peerId     String
+  torrent    Torrent  @relation(fields: [torrentId], references: [id])
+  torrentId  Int
+  ip         String
+  ipv4       String?
+  ipv6       String?
+  port       Int
+  uploaded   Int
+  downloaded Int
+  left       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([peerId, torrentId])
+}

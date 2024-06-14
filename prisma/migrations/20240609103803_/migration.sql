@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Torrent" ALTER COLUMN "leechers" SET DEFAULT 0,
+ALTER COLUMN "seeders" SET DEFAULT 0;
